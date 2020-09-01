@@ -11,6 +11,7 @@ package leetcode;
  */
 public class CountPalindromicSubSequences {
 
+    //leetcode
     public static void main(String[] args) {
 
         System.out.println(new CountPalindromicSubSequences().countPalindromicSubSequences("bcbacbabdcbcbdcbddcaaccdcbbcdbcabbcdddadaadddbdbbbdacbabaabdddcaccccdccdbabcddbdcccabccbbcdbcdbdaada"));
