@@ -1,6 +1,4 @@
-package leetcode.dynamicPromgrammint;
-
-import sun.nio.cs.ext.MacHebrew;
+package leetcode.dynamicPromgramming;
 
 /**
  * no leet-code

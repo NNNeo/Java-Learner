@@ -1,4 +1,4 @@
-package leetcode.dynamicPromgrammint;
+package leetcode.dynamicPromgramming;
 
 /**
  * 给你一个正整数数组 arr，考虑所有满足以下条件的二叉树：
