@@ -1,6 +1,4 @@
-package leetcode;
-
-import java.util.Arrays;
+package leetcode.dynamicPromgrammint;
 
 /**
  * 给你一个正整数数组 arr，考虑所有满足以下条件的二叉树：

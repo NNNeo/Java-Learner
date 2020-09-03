@@ -1,13 +1,13 @@
-package leetcode;
+package leetcode.dynamicPromgrammint;
 
 import sun.nio.cs.ext.MacHebrew;
 
 /**
  * no leet-code
  *
- *  Ò»¸öÕûÊýÐòÁÐ a£¬ ¶¨Òåsum£¬ sum(i, j) = a[i] + ... + a[j]
- *  ¸ø³öÕýÕûÊým£¬ ÕÒ³öm¶Ôi£¬ j£¬ Ê¹µÃsum(i1, j1) + ... + sum(im, jm)  ×î´ó
- *  eg£º-1 4 -2 3 -2 3£¬ m = 2
+ *  Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ aï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½sumï¿½ï¿½ sum(i, j) = a[i] + ... + a[j]
+ *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ ï¿½Ò³ï¿½mï¿½ï¿½iï¿½ï¿½ jï¿½ï¿½ Ê¹ï¿½ï¿½sum(i1, j1) + ... + sum(im, jm)  ï¿½ï¿½ï¿½
+ *  egï¿½ï¿½-1 4 -2 3 -2 3ï¿½ï¿½ m = 2
  *
  */
 public class MaximumMSegmentsSum {
@@ -26,13 +26,13 @@ public class MaximumMSegmentsSum {
         System.arraycopy(num1, 0, num, 1, n);
         int max = Integer.MIN_VALUE;
         dp[0] = max;
-        // dp[i][j] £º Ç°jÏî·ÖÎªi¶ÎµÄ×î´óÖµ
-        // ÓÃÒ»Î¬Êý×éÊµÏÖ
-        // ´ÓÕÒ³öÒ»¶Ô¿ªÊ¼
+        // dp[i][j] ï¿½ï¿½ Ç°jï¿½ï¿½ï¿½Îªiï¿½Îµï¿½ï¿½ï¿½ï¿½Öµ
+        // ï¿½ï¿½Ò»Î¬ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
+        // ï¿½ï¿½ï¿½Ò³ï¿½Ò»ï¿½Ô¿ï¿½Ê¼
         int i, j;
         for (i = 1; i <= m; ++ i) {
             max = Integer.MIN_VALUE;
-            //numÖÐµÄ³¤¶ÈÖÁÉÙÎªi£¬ Âú×ã·ÖÎªi¶Î
+            //numï¿½ÐµÄ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªiï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îªiï¿½ï¿½
             for (j = i; j <= n; ++ j) {
                 dp[j] = Math.max(dp[j-1], pre[j-1]) + num[j];
                 pre[j-1] = max;
