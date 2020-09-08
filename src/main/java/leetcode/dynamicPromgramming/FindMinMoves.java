@@ -1,5 +1,7 @@
 package leetcode.dynamicPromgramming;
 
+import java.util.function.Function;
+
 /**
  * 517
  * 假设有 n 台超级洗衣机放在同一排上。开始的时候，每台洗衣机内可能有一定量的衣服，也可能是空的
@@ -37,5 +39,9 @@ public class FindMinMoves {
 
     public static void main(String[] args) {
         System.out.println(new FindMinMoves().findMinMoves(new int[]{4, 0, 0, 4}));
+    }
+
+    static <A,B,C> Function<A, C> partialB(B b, Function<A, Function<B, C>> f) {
+        return a -> f.apply(a).apply(b);
     }
 }
