@@ -1,4 +1,4 @@
-package leetcode.test;
+package test;
 
 public class Test1 {
 

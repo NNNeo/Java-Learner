@@ -1,4 +1,4 @@
-package leetcode.pleaseOffer;
+package pleaseOffer;
 
 import java.util.*;
 
