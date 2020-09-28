@@ -28,12 +28,14 @@ public class CAstTest{
         String stat;
         // map 存储 文件 : 行数， 内容，
         HashMap<String, HashMap<Integer, String>> map = new HashMap<>();
+        HashMap<Integer, String> lineMap = new HashMap<>();
         // 逐行遍历
         HashMap<Integer, StatementContent> content = new HashMap<>();
         boolean noteLinesFlag = false;
         int line = 0;
         while ((stat = bufferedReader.readLine()) != null) {
             line ++; // 当前行数
+            stat = stat.trim();
             if (stat.startsWith("//")) {
                 continue;
             } else if (stat.startsWith("/*")) {
@@ -44,25 +46,91 @@ public class CAstTest{
             if (noteLinesFlag) {
                 continue;
             }
-
             StatementContent sc = new StatementContent();
-            sc.setContent(stat);
-            String normalContent = genNormalContent(stat);
+            genStatContent(stat, sc);
+            sc.setLineNum(line);
 
         }
     }
 
-    private static String genNormalContent(String stat) {
-        StringBuilder sb = new StringBuilder();
+    private static void genStatContent(String stat, StatementContent sc) {
+        stat = stat.trim();
+        int idx = stat.indexOf(";");
+        if (idx != -1) {
+            stat = stat.substring(0,idx);
+        }
         String[] stats = stat.split(" ");
-        for (String st : stats) {
-            if (isKeyWordInC(st)) {
-                sb.append(st);
-            } else if (isVar(stat)) {
+        String normal = "";
+        // 以关键字开头，
+        // 函数定义，变量声明
+        if (CKeyWord.isDataTypeKeyWord(stats[0])) {
+
+            // 函数声明语句开头
+            if (stat.contains("(") || stat.contains(")")) {
+                sc.setContent(stat);
+
+                for (String states : stats) {
+                    if (CKeyWord.isCKeyWord(states)) {
+                        normal += states;
+                    } else {
+                        normal += " $";
+                        break;
+                    }
+                }
+
+
+            } else {
+                // 声明变量
+                for (String states : stats) {
+                    if (CKeyWord.isCKeyWord(states)) {
+                        normal += states;
+                    } else if (isNum(states)) {
+                        normal += " num ";
+                    } else if (isVar(states)) {
+                        normal += " $ ";
+                    } else {
+
+                    }
+                }
 
             }
+
+        } else if (CKeyWord.controlTypeWordSet.contains(stats[0])) {
+            // for (
+            normal += stats[0];
+
+            if (stats[0].equals("for")) {
+                int bridx = stat.indexOf("(");
+                int brbidx = stat.indexOf(")");
+                normal += "(";
+                String inner = stat.substring(bridx, brbidx);
+                String[] inners = inner.split(";");
+                // int i = 1;
+                // i = 1
+                // i= 1;
+                // i=1;
+                // i =1;
+                // ;
+                if (inners[0].length() > 0) {
+                    String[] inns = inners[0].split(" ");
+                    if (CKeyWord.isCKeyWord(inns[0])) {
+                        normal += inns[0] + " ";
+                    }
+                    normal += "$ = num;";
+
+
+                } else {
+
+                }
+             }
+
+
         }
-        return null;
+
+        if (idx != -1) {
+            normal += ";";
+        }
+        sc.setNormalizeContent(normal);
     }
 
     private static boolean isVar(String stat) {
@@ -121,44 +189,52 @@ class CKeyWord {
     public static final String GOTO = "goto";
     public static final String SIZEOF = "sizeof";
 
-    static HashSet<String> keyWordSet = new HashSet<>();
+    static HashSet<String> dataTypeWordSet = new HashSet<>();
+    static HashSet<String> controlTypeWordSet = new HashSet<>();
     static {
-        keyWordSet.add(AUTO);
-        keyWordSet.add(INT);
-        keyWordSet.add(LONG);
-        keyWordSet.add(DOUBLE);
-        keyWordSet.add(CHAR);
-        keyWordSet.add(FLOAT);
-        keyWordSet.add(SHORT);
-        keyWordSet.add(SIGNED);
-        keyWordSet.add(UNSIGNED);
-        keyWordSet.add(STRUCT);
-        keyWordSet.add(UNION);
-        keyWordSet.add(ENUM);
-        keyWordSet.add(STATIC);
-        keyWordSet.add(SWITCH);
-        keyWordSet.add(CASE);
-        keyWordSet.add(DEFAULT);
-        keyWordSet.add(BREAK);
-        keyWordSet.add(CONTINUE);
-        keyWordSet.add(REGISTER);
-        keyWordSet.add(CONST);
-        keyWordSet.add(VOLATILE);
-        keyWordSet.add(TYPEDEF);
-        keyWordSet.add(EXTERN);
-        keyWordSet.add(RETURN);
-        keyWordSet.add(VOID);
-        keyWordSet.add(DO);
-        keyWordSet.add(WHILE);
-        keyWordSet.add(IF);
-        keyWordSet.add(ELSE);
-        keyWordSet.add(FOR);
-        keyWordSet.add(GOTO);
-        keyWordSet.add(SIZEOF);
+        dataTypeWordSet.add(AUTO);
+        dataTypeWordSet.add(INT);
+        dataTypeWordSet.add(LONG);
+        dataTypeWordSet.add(DOUBLE);
+        dataTypeWordSet.add(CHAR);
+        dataTypeWordSet.add(FLOAT);
+        dataTypeWordSet.add(SHORT);
+        dataTypeWordSet.add(SIGNED);
+        dataTypeWordSet.add(UNSIGNED);
+        dataTypeWordSet.add(STRUCT);
+        dataTypeWordSet.add(UNION);
+        dataTypeWordSet.add(ENUM);
+        dataTypeWordSet.add(STATIC);
+        dataTypeWordSet.add(CONST);
+        dataTypeWordSet.add(VOLATILE);
+        dataTypeWordSet.add(TYPEDEF);
+        dataTypeWordSet.add(EXTERN);
+        dataTypeWordSet.add(VOID);
+        controlTypeWordSet.add(RETURN);
+        controlTypeWordSet.add(SWITCH);
+        controlTypeWordSet.add(CASE);
+        controlTypeWordSet.add(DEFAULT);
+        controlTypeWordSet.add(BREAK);
+        controlTypeWordSet.add(CONTINUE);
+        controlTypeWordSet.add(REGISTER);
+        controlTypeWordSet.add(DO);
+        controlTypeWordSet.add(WHILE);
+        controlTypeWordSet.add(IF);
+        controlTypeWordSet.add(ELSE);
+        controlTypeWordSet.add(FOR);
+        controlTypeWordSet.add(GOTO);
+        controlTypeWordSet.add(SIZEOF);
     }
 
     public static boolean isCKeyWord(String st) {
-        return keyWordSet.contains(st);
+        return dataTypeWordSet.contains(st);
+    }
+    public static boolean isDataTypeKeyWord(String st) {
+        return dataTypeWordSet.contains(st);
+    }
+
+    public static boolean isControlTypeKeyWord(String st) {
+        return controlTypeWordSet.contains(st);
     }
 }
 
